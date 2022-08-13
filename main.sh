@@ -221,6 +221,8 @@ FORCE_REBUILD=${FORCE_REBUILD-}
 DRYRUN=${DRYRUN-}
 NOREFRESH=${NOREFRESH-}
 NBPARALLEL=${NBPARALLEL-2}
+SKIP_TAGS_REBUILD=${SKIP_TAGS_REBUILD-}
+SKIP_TAGS_REFRESH=${SKIP_TAGS_REFRESH-${SKIP_TAGS_REBUILD}}
 SKIP_IMAGES_SCAN=${SKIP_IMAGES_SCAN-}
 SKIP_MINOR_ES="((elasticsearch):.*([0-5]\.?){3}(-32bit.*)?)"
 SKIP_MINOR_ES2="$SKIP_MINOR_ES|(elasticsearch:(5\.[0-4]\.)|(6\.8\.[0-8])|(6\.[0-7])|(7\.9\.[0-2])|(7\.[0-8]))"
@@ -241,7 +243,7 @@ SKIP_OS="$SKIP_OS|(centos:(centos)?5)"
 SKIP_OS="$SKIP_OS|(fedora.*(modular|21))"
 SKIP_OS="$SKIP_OS|(traefik:((camembert|cancoillotte|cantal|chevrotin|faisselle|livarot|maroilles|montdor|morbier|picodon|raclette|reblochon|roquefort|tetedemoine)(-alpine)?|rc.*|(v?([0-9]+\.[0-9]+\.).*$)))"
 SKIP_OS="$SKIP_OS|(minio.*(armhf|aarch))"
-SKIP_PHP="(php:(5.4|5.3|.*(RC|-rc-).*))"
+SKIP_PHP="(php:(rc.*|.*alpine3\.|[0-9]+\.[0-9]+\.[0-9]+.*|5.4|5.3|.*(RC|-rc-).*))"
 SKIP_OS="$SKIP_OS)"
 SKIP_WINDOWS="(.*(nanoserver|windows))"
 SKIP_MISC="(-?(on.?build)|pgrouting.*old)|seafile-mc:(7.0.1|7.0.2|7.0.3|7.0.4|7.0.5|7.1.3)|(dejavu:(v.*|1\..\.?.?|2\..\..)|3\.[1-3]\..|3.0.0|.*alpha.*$)"
@@ -250,7 +252,7 @@ SKIP_TF="(tensorflow.serving:[0-9].*)"
 SKIP_MINIO="(k8s-operator|((minio|mc):(RELEASE.)?[0-9]{4}-.{7}))"
 SKIP_MAILU="(mailu.*(feat|patch|merg|refactor|revert|upgrade|fix-|pr-template))"
 SKIP_DOCKER="docker(\/|:)([0-9]+\.[0-9]+\.|17|18.0[1-6]|1$|1(\.|-)).*"
-SKIPPED_TAGS="$SKIP_TF|$SKIP_MINOR_OS|$SKIP_NODE|$SKIP_DOCKER|$SKIP_MINIO|$SKIP_MAILU|$SKIP_MINOR_ES2|$SKIP_MINOR|$SKIP_PRE|$SKIP_OS|$SKIP_PHP|$SKIP_WINDOWS|$SKIP_MISC"
+SKIPPED_TAGS="$SKIP_PHP"
 CURRENT_TS=$(date +%s)
 IMAGES_SKIP_NS="((mailhog|postgis|pgrouting(-bare)?|^library|dejavu|(minio/(minio|mc))))"
 
@@ -279,6 +281,96 @@ NODE_TOP="$(echo $(find_top_node))"
 MAILU_VERSiON=1.7
 
 BATCHED_IMAGES="\
+library/php/7.1\
+ library/php/7.1-alpine\
+ library/php/7.1-apache\
+ library/php/7.1-apache-buster\
+ library/php/7.1-apache-jessie\
+ library/php/7.1-apache-stretch\
+ library/php/7.1-buster\
+ library/php/7.1-cli\
+ library/php/7.1-cli-alpine\
+ library/php/7.1-cli-buster\
+ library/php/7.1-cli-jessie\
+ library/php/7.1-cli-stretch\
+ library/php/7.1-fpm\
+ library/php/7.1-fpm-alpine\
+ library/php/7.1-fpm-buster\
+ library/php/7.1-fpm-jessie\
+ library/php/7.1-fpm-stretch\
+ library/php/7.1-jessie\
+ library/php/7.1-rc\
+ library/php/7.1-stretch\
+ library/php/7.1-zts\
+ library/php/7.1-zts-alpine\
+ library/php/7.1-zts-buster\
+ library/php/7.1-zts-jessie\
+ library/php/7.1-zts-stretch::42
+library/php/7.2\
+ library/php/7.2-alpine\
+ library/php/7.2-apache\
+ library/php/7.2-apache-buster\
+ library/php/7.2-apache-stretch\
+ library/php/7.2-buster\
+ library/php/7.2-cli\
+ library/php/7.2-cli-alpine\
+ library/php/7.2-cli-buster\
+ library/php/7.2-cli-stretch\
+ library/php/7.2-fpm\
+ library/php/7.2-fpm-alpine\
+ library/php/7.2-fpm-buster\
+ library/php/7.2-fpm-stretch\
+ library/php/7.2-rc\
+ library/php/7.2-stretch\
+ library/php/7.2-zts\
+ library/php/7.2-zts-alpine\
+ library/php/7.2-zts-buster\
+ library/php/7.2-zts-stretch::42
+library/php/7.3\
+ library/php/7.3-alpine\
+ library/php/7.3-apache\
+ library/php/7.3-apache-bullseye\
+ library/php/7.3-apache-buster\
+ library/php/7.3-apache-stretch\
+ library/php/7.3-bullseye\
+ library/php/7.3-buster\
+ library/php/7.3-cli\
+ library/php/7.3-cli-alpine\
+ library/php/7.3-cli-bullseye\
+ library/php/7.3-cli-buster\
+ library/php/7.3-cli-stretch\
+ library/php/7.3-fpm\
+ library/php/7.3-fpm-alpine\
+ library/php/7.3-fpm-bullseye\
+ library/php/7.3-fpm-buster\
+ library/php/7.3-fpm-stretch\
+ library/php/7.3-rc\
+ library/php/7.3-stretch\
+ library/php/7.3-zts\
+ library/php/7.3-zts-alpine\
+ library/php/7.3-zts-bullseye\
+ library/php/7.3-zts-buster\
+ library/php/7.3-zts-stretch::42
+library/php/7.4\
+ library/php/7.4-alpine\
+ library/php/7.4-apache\
+ library/php/7.4-apache-bullseye\
+ library/php/7.4-apache-buster\
+ library/php/7.4-bullseye\
+ library/php/7.4-buster\
+ library/php/7.4-cli\
+ library/php/7.4-cli-alpine\
+ library/php/7.4-cli-bullseye\
+ library/php/7.4-cli-buster\
+ library/php/7.4-fpm\
+ library/php/7.4-fpm-alpine\
+ library/php/7.4-fpm-bullseye\
+ library/php/7.4-fpm-buster\
+ library/php/7.4-rc\
+ library/php/7.4-zts\
+ library/php/7.4-zts-alpine\
+ library/php/7.4-zts-bullseye\
+ library/php/7.4-zts-buster::42
 library/php/8.0-alpine\
  library/php/8.0-cli-alpine\
  library/php/8.0-fpm-alpine\
@@ -603,9 +695,10 @@ get_image_tags() {
     else
         has_more=0
     fi
-    if [ $has_more -eq 0 ];then
+    if [[ -z ${SKIP_TAGS_REFRESH-} ]] && [ $has_more -eq 0 ];then
         while [ $has_more -eq 0 ];do
             i=$((i+1))
+            exit 1
             result=$( curl "${u}?page=${i}" 2>/dev/null \
                 | jq -r '."results"[]["name"]' 2>/dev/null )
             has_more=$?
@@ -614,10 +707,12 @@ get_image_tags() {
         if [ ! -e "$TOPDIR/$n" ];then mkdir -p "$TOPDIR/$n";fi
         printf "$results\n" | sort -V > "$t.raw"
     fi
+    if [[ -z ${SKIP_TAGS_REBUILD-} ]];then
     rm -f "$t"
     ( for i in $(cat "$t.raw");do
         if is_skipped "$n:$i";then debug "Skipped: $n:$i";else printf "$i\n";fi
       done | awk '!seen[$0]++' | sort -V ) >> "$t"
+    fi
     set -e
     if [ -e "$t" ];then cat "$t";fi
 }
