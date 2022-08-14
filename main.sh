@@ -281,186 +281,89 @@ NODE_TOP="$(echo $(find_top_node))"
 MAILU_VERSiON=1.7
 
 BATCHED_IMAGES="\
-library/php/7.1\
- library/php/7.1-alpine\
- library/php/7.1-apache\
- library/php/7.1-apache-buster\
- library/php/7.1-apache-jessie\
- library/php/7.1-apache-stretch\
- library/php/7.1-buster\
- library/php/7.1-cli\
- library/php/7.1-cli-alpine\
- library/php/7.1-cli-buster\
- library/php/7.1-cli-jessie\
- library/php/7.1-cli-stretch\
- library/php/7.1-fpm\
- library/php/7.1-fpm-alpine\
- library/php/7.1-fpm-buster\
- library/php/7.1-fpm-jessie\
- library/php/7.1-fpm-stretch\
- library/php/7.1-jessie\
- library/php/7.1-rc\
- library/php/7.1-stretch\
- library/php/7.1-zts\
- library/php/7.1-zts-alpine\
- library/php/7.1-zts-buster\
- library/php/7.1-zts-jessie\
- library/php/7.1-zts-stretch::42
-library/php/7.2\
- library/php/7.2-alpine\
- library/php/7.2-apache\
- library/php/7.2-apache-buster\
- library/php/7.2-apache-stretch\
- library/php/7.2-buster\
- library/php/7.2-cli\
- library/php/7.2-cli-alpine\
- library/php/7.2-cli-buster\
- library/php/7.2-cli-stretch\
- library/php/7.2-fpm\
- library/php/7.2-fpm-alpine\
- library/php/7.2-fpm-buster\
- library/php/7.2-fpm-stretch\
- library/php/7.2-rc\
- library/php/7.2-stretch\
- library/php/7.2-zts\
- library/php/7.2-zts-alpine\
- library/php/7.2-zts-buster\
- library/php/7.2-zts-stretch::42
-library/php/7.3\
- library/php/7.3-alpine\
- library/php/7.3-apache\
- library/php/7.3-apache-bullseye\
- library/php/7.3-apache-buster\
- library/php/7.3-apache-stretch\
- library/php/7.3-bullseye\
- library/php/7.3-buster\
- library/php/7.3-cli\
- library/php/7.3-cli-alpine\
- library/php/7.3-cli-bullseye\
- library/php/7.3-cli-buster\
- library/php/7.3-cli-stretch\
- library/php/7.3-fpm\
- library/php/7.3-fpm-alpine\
- library/php/7.3-fpm-bullseye\
- library/php/7.3-fpm-buster\
- library/php/7.3-fpm-stretch\
- library/php/7.3-rc\
- library/php/7.3-stretch\
- library/php/7.3-zts\
- library/php/7.3-zts-alpine\
- library/php/7.3-zts-bullseye\
- library/php/7.3-zts-buster\
- library/php/7.3-zts-stretch::42
+library/php/8\
+ library/php/8-alpine\
+ library/php/8-apache\
+ library/php/8-cli\
+ library/php/8-cli-alpine\
+ library/php/8-fpm\
+ library/php/8-fpm-alpine\
+ library/php/8-zts::42
 library/php/7.4\
  library/php/7.4-alpine\
  library/php/7.4-apache\
- library/php/7.4-apache-bullseye\
- library/php/7.4-apache-buster\
- library/php/7.4-bullseye\
- library/php/7.4-buster\
  library/php/7.4-cli\
  library/php/7.4-cli-alpine\
- library/php/7.4-cli-bullseye\
- library/php/7.4-cli-buster\
  library/php/7.4-fpm\
  library/php/7.4-fpm-alpine\
- library/php/7.4-fpm-bullseye\
- library/php/7.4-fpm-buster\
  library/php/7.4-rc\
  library/php/7.4-zts\
- library/php/7.4-zts-alpine\
- library/php/7.4-zts-bullseye\
- library/php/7.4-zts-buster::42
-library/php/8.0-alpine\
- library/php/8.0-cli-alpine\
- library/php/8.0-fpm-alpine\
- library/php/8-alpine\
- library/php/8-cli-alpine\
- library/php/8-fpm-alpine::7
-library/php/8\
- library/php/8.0\
- library/php/8.0-apache\
- library/php/8.0-apache-buster\
- library/php/8.0-buster\
- library/php/8.0-cli\
- library/php/8.0-cli-buster\
- library/php/8.0-fpm\
- library/php/8.0-fpm-buster\
- library/php/8.0-zts\
- library/php/8.0-zts-buster\
- library/php/8-apache\
- library/php/8-apache-buster\
- library/php/8-buster\
- library/php/8-cli\
- library/php/8-cli-buster\
- library/php/8-fpm\
- library/php/8-fpm-buster\
- library/php/8-zts\
- library/php/8-zts-buster::7
-library/php/alpine\
- library/php/cli-alpine\
- library/php/fpm-alpine\
- library/php/zts-alpine\
- library/php/5-alpine\
- library/php/5-cli-alpine\
- library/php/5-fpm-alpine\
- library/php/5-zts-alpine\
- library/php/7-alpine\
- library/php/7-cli-alpine\
- library/php/7-fpm-alpine\
- library/php/7-zts-alpine\
+ library/php/7.4-zts-alpine::42
+library/php/7.3\
  library/php/7.3-alpine\
- library/php/7.3-cli-alpine\
- library/php/7.3-fpm-alpine\
- library/php/7.3-zts-alpine::7
-library/php/7\
- library/php/7-cli\
- library/php/7-fpm\
- library/php/7-zts\
- library/php/5\
- library/php/5-cli\
- library/php/5-fpm\
- library/php/5-zts\
- library/php/latest\
- library/php/cli\
- library/php/fpm\
- library/php/zts\
- library/php/7.3\
+ library/php/7.3-apache\
  library/php/7.3-cli\
+ library/php/7.3-cli-alpine\
  library/php/7.3-fpm\
+ library/php/7.3-fpm-alpine\
+ library/php/7.3-rc\
  library/php/7.3-zts\
- library/php/7.2\
- library/php/7.2-cli\
- library/php/7.2-fpm\
- library/php/7.2-zts\
- library/php/5.6\
- library/php/5.6-cli\
- library/php/5.6-fpm\
- library/php/5.6-zts\
- library/php/7.0\
- library/php/7.0-cli\
- library/php/7.0-fpm\
- library/php/7.0-zts\
- library/php/7.1\
- library/php/7.1-cli\
- library/php/7.1-fpm\
- library/php/7.1-zts::7
-library/php/5.6-alpine\
- library/php/5.6-cli-alpine\
- library/php/5.6-fpm-alpine\
- library/php/5.6-zts-alpine\
- library/php/7.0-alpine\
- library/php/7.0-cli-alpine\
- library/php/7.0-fpm-alpine\
- library/php/7.0-zts-alpine\
- library/php/7.1-alpine\
- library/php/7.1-cli-alpine\
- library/php/7.1-fpm-alpine\
- library/php/7.1-zts-alpine\
+ library/php/7.3-zts-alpine::42
+library/php/7.2\
  library/php/7.2-alpine\
+ library/php/7.2-apache\
+ library/php/7.2-cli\
  library/php/7.2-cli-alpine\
+ library/php/7.2-fpm\
  library/php/7.2-fpm-alpine\
- library/php/7.2-zts-alpine::7
+ library/php/7.2-rc\
+ library/php/7.2-zts::42
+library/php/7.1\
+ library/php/7.1-alpine\
+ library/php/7.1-apache\
+ library/php/7.1-cli\
+ library/php/7.1-cli-alpine\
+ library/php/7.1-fpm\
+ library/php/7.1-fpm-alpine\
+ library/php/7.1-rc\
+ library/php/7.1-zts\
+ library/php/7.1-zts-alpine::42
+library/php/8.0\
+ library/php/8.0-alpine\
+ library/php/8.0-apache\
+ library/php/8.0-cli\
+ library/php/8.0-cli-alpine\
+ library/php/8.0-fpm\
+ library/php/8.0-fpm-alpine\
+ library/php/8.0-rc\
+ library/php/8.0-zts::42
+library/php/7\
+ library/php/7-alpine\
+ library/php/7-apache\
+ library/php/7-cli\
+ library/php/7-cli-alpine\
+ library/php/7-fpm\
+ library/php/7-fpm-alpine\
+ library/php/7-zts\
+ library/php/7-zts-alpine::42
+library/php/5\
+ library/php/5-alpine\
+ library/php/5-apache\
+ library/php/5-cli\
+ library/php/5-cli-alpine\
+ library/php/5-fpm\
+ library/php/5-fpm-alpine\
+ library/php/5-zts\
+ library/php/5-zts-alpine::42
+library/php/latest\
+ library/php/alpine\
+ library/php/apache\
+ library/php/cli\
+ library/php/cli-alpine\
+ library/php/fpm\
+ library/php/fpm-alpine\
+ library/php/zts\
+ library/php/zts-alpine::42
 "
 SKIP_REFRESH_ANCESTORS=${SKIP_REFRESH_ANCESTORS-}
 
