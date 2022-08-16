@@ -598,10 +598,9 @@ get_image_tags() {
     else
         has_more=0
     fi
-    if [[ -z ${SKIP_TAGS_REFRESH-} ]] && [ $has_more -eq 0 ];then
+    if [[ -z ${SKIP_TAGS_REFRESH} ]] && [ $has_more -eq 0 ];then
         while [ $has_more -eq 0 ];do
             i=$((i+1))
-            exit 1
             result=$( curl "${u}?page=${i}" 2>/dev/null \
                 | jq -r '."results"[]["name"]' 2>/dev/null )
             has_more=$?
@@ -610,7 +609,7 @@ get_image_tags() {
         if [ ! -e "$TOPDIR/$n" ];then mkdir -p "$TOPDIR/$n";fi
         printf "$results\n" | sort -V > "$t.raw"
     fi
-    if [[ -z ${SKIP_TAGS_REBUILD-} ]];then
+    if [[ -z ${SKIP_TAGS_REBUILD} ]];then
     rm -f "$t"
     ( for i in $(cat "$t.raw");do
         if is_skipped "$n:$i";then debug "Skipped: $n:$i";else printf "$i\n";fi
