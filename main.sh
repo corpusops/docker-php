@@ -26,6 +26,10 @@ NORMAL="\\e[0;0m"
 NO_COLOR=${NO_COLORS-${NO_COLORS-${NOCOLOR-${NOCOLORS-}}}}
 LOGGER_NAME=${LOGGER_NAME:-corpusops_build}
 ERROR_MSG="There were errors"
+ver_ge() { [  "$2" = "`echo -e "$1\n$2" | sort -V | head -n1`" ]; }
+ver_gt() { [ "$1" = "$2" ] && return 1 || ver_ge $1 $2; }
+ver_le() { [  "$1" = "`echo -e "$1\n$2" | sort -V | head -n1`" ]; }
+ver_lt() { [ "$1" = "$2" ] && return 1 || ver_le $1 $2; }
 uniquify_string() {
     local pattern=$1
     shift
@@ -238,7 +242,6 @@ SKIP_OS="$SKIP_OS|((debian|redis):[0-9]+\.[0-9]+.*)"
 SKIP_OS="$SKIP_OS|(centos:.\..\.....|centos.\..\.....)"
 SKIP_OS="$SKIP_OS|(alpine:.\.[0-9]+\.[0-9]+)"
 SKIP_OS="$SKIP_OS|(debian:(6.*|squeeze))"
-SKIP_OS="$SKIP_OS|(ubuntu:(([0-9][0-9]\.[0-9][0-9]\..*)|(14.10|12|10|11|13|15)))"
 SKIP_OS="$SKIP_OS|(lucid|maverick|natty|precise|quantal|raring|saucy)"
 SKIP_OS="$SKIP_OS|(centos:(centos)?5)"
 SKIP_OS="$SKIP_OS|(fedora.*(modular|21))"
@@ -253,17 +256,21 @@ SKIP_TF="(tensorflow.serving:[0-9].*)"
 SKIP_MINIO="(k8s-operator|((minio|mc):(RELEASE.)?[0-9]{4}-.{7}))"
 SKIP_MAILU="(mailu.*(feat|patch|merg|refactor|revert|upgrade|fix-|pr-template))"
 SKIP_DOCKER="docker(\/|:)([0-9]+\.[0-9]+\.|17|18.0[1-6]|1$|1(\.|-)).*"
-SKIP_PHP="(php:(rc.*|.*alpine3\.|[0-9]+\.[0-9]+\.[0-9]+.*|5.4|5.3|.*(RC|-rc-).*))"
-SKIP_OBSOLETE_PHP="stretch|jessie"
-SKIPPED_TAGS="$SKIP_PHP|$SKIP_OBSOLETE_PHP|7.3-rc$"
+SKIPPED_TAGS="$SKIP_TF|$SKIP_MINOR_OS|$SKIP_NODE|$SKIP_DOCKER|$SKIP_MINIO|$SKIP_MAILU|$SKIP_MINOR|$SKIP_PRE|$SKIP_OS|$SKIP_PHP|$SKIP_WINDOWS|$SKIP_MISC"
 CURRENT_TS=$(date +%s)
 IMAGES_SKIP_NS="((mailhog|postgis|pgrouting(-bare)?|^library|dejavu|(minio/(minio|mc))))"
 
 
+PHP_SKIPPED_TAGS="php:(5|6|[0-9]+\.[0-9]+\.[0-9]+.*|.*(wheezy|stretch|jessie|buster|bookworm|bullseye|RC|rc|alpine3).*)"
+SKIPPED_TAGS="$PHP_SKIPPED_TAGS"
+
+# (see docker-elasticsearch for example on how to use)
+PROTECTED_VERSIONS=""
 default_images="
 library/php
 "
-
+ONLY_ONE_MINOR="postgres|nginx|opensearch|elasticsearch"
+PROTECTED_TAGS="corpusops/rsyslog"
 find_top_node_() {
     img=library/node
     if [ ! -e $img ];then return;fi
@@ -284,6 +291,24 @@ NODE_TOP="$(echo $(find_top_node))"
 MAILU_VERSiON=1.7
 
 BATCHED_IMAGES="\
+library/php/alpine\
+ library/php/apache\
+ library/php/cli\
+ library/php/cli-alpine\
+ library/php/fpm\
+ library/php/fpm-alpine\
+ library/php/latest\
+ library/php/zts\
+ library/php/zts-alpine::30
+library/php/8.3\
+ library/php/8.3-alpine\
+ library/php/8.3-apache\
+ library/php/8.3-cli\
+ library/php/8.3-cli-alpine\
+ library/php/8.3-fpm\
+ library/php/8.3-fpm-alpine\
+ library/php/8.3-zts\
+ library/php/8.3-zts-alpine::30
 library/php/8\
  library/php/8-alpine\
  library/php/8-apache\
@@ -291,55 +316,8 @@ library/php/8\
  library/php/8-cli-alpine\
  library/php/8-fpm\
  library/php/8-fpm-alpine\
- library/php/8-zts::42
-library/php/7.4\
- library/php/7.4-alpine\
- library/php/7.4-apache\
- library/php/7.4-cli\
- library/php/7.4-cli-alpine\
- library/php/7.4-fpm\
- library/php/7.4-fpm-alpine\
- library/php/7.4-rc\
- library/php/7.4-zts\
- library/php/7.4-zts-alpine::42
-library/php/7.3\
- library/php/7.3-alpine\
- library/php/7.3-apache\
- library/php/7.3-cli\
- library/php/7.3-cli-alpine\
- library/php/7.3-fpm\
- library/php/7.3-fpm-alpine\
- library/php/7.3-rc\
- library/php/7.3-zts\
- library/php/7.3-zts-alpine::42
-library/php/7.2\
- library/php/7.2-alpine\
- library/php/7.2-apache\
- library/php/7.2-cli\
- library/php/7.2-cli-alpine\
- library/php/7.2-fpm\
- library/php/7.2-fpm-alpine\
- library/php/7.2-rc\
- library/php/7.2-zts::42
-library/php/7.1\
- library/php/7.1-alpine\
- library/php/7.1-apache\
- library/php/7.1-cli\
- library/php/7.1-cli-alpine\
- library/php/7.1-fpm\
- library/php/7.1-fpm-alpine\
- library/php/7.1-rc\
- library/php/7.1-zts\
- library/php/7.1-zts-alpine::42
-library/php/8.0\
- library/php/8.0-alpine\
- library/php/8.0-apache\
- library/php/8.0-cli\
- library/php/8.0-cli-alpine\
- library/php/8.0-fpm\
- library/php/8.0-fpm-alpine\
- library/php/8.0-rc\
- library/php/8.0-zts::42
+ library/php/8-zts\
+ library/php/8-zts-alpine::30
 library/php/7\
  library/php/7-alpine\
  library/php/7-apache\
@@ -348,25 +326,79 @@ library/php/7\
  library/php/7-fpm\
  library/php/7-fpm-alpine\
  library/php/7-zts\
- library/php/7-zts-alpine::42
-library/php/5\
- library/php/5-alpine\
- library/php/5-apache\
- library/php/5-cli\
- library/php/5-cli-alpine\
- library/php/5-fpm\
- library/php/5-fpm-alpine\
- library/php/5-zts\
- library/php/5-zts-alpine::42
-library/php/latest\
- library/php/alpine\
- library/php/apache\
- library/php/cli\
- library/php/cli-alpine\
- library/php/fpm\
- library/php/fpm-alpine\
- library/php/zts\
- library/php/zts-alpine::42
+ library/php/7-zts-alpine::30
+library/php/7.0\
+ library/php/7.0-alpine\
+ library/php/7.0-apache\
+ library/php/7.0-cli\
+ library/php/7.0-cli-alpine\
+ library/php/7.0-fpm\
+ library/php/7.0-fpm-alpine\
+ library/php/7.0-zts\
+ library/php/7.0-zts-alpine::30
+library/php/7.1\
+ library/php/7.1-alpine\
+ library/php/7.1-apache\
+ library/php/7.1-cli\
+ library/php/7.1-cli-alpine\
+ library/php/7.1-fpm\
+ library/php/7.1-fpm-alpine\
+ library/php/7.1-zts\
+ library/php/7.1-zts-alpine::30
+library/php/7.2\
+ library/php/7.2-alpine\
+ library/php/7.2-apache\
+ library/php/7.2-cli\
+ library/php/7.2-cli-alpine\
+ library/php/7.2-fpm\
+ library/php/7.2-fpm-alpine\
+ library/php/7.2-zts\
+ library/php/7.2-zts-alpine::30
+library/php/7.3\
+ library/php/7.3-alpine\
+ library/php/7.3-apache\
+ library/php/7.3-cli\
+ library/php/7.3-cli-alpine\
+ library/php/7.3-fpm\
+ library/php/7.3-fpm-alpine\
+ library/php/7.3-zts\
+ library/php/7.3-zts-alpine::30
+library/php/7.4\
+ library/php/7.4-alpine\
+ library/php/7.4-apache\
+ library/php/7.4-cli\
+ library/php/7.4-cli-alpine\
+ library/php/7.4-fpm\
+ library/php/7.4-fpm-alpine\
+ library/php/7.4-zts\
+ library/php/7.4-zts-alpine::30
+library/php/8.0\
+ library/php/8.0-alpine\
+ library/php/8.0-apache\
+ library/php/8.0-cli\
+ library/php/8.0-cli-alpine\
+ library/php/8.0-fpm\
+ library/php/8.0-fpm-alpine\
+ library/php/8.0-zts\
+ library/php/8.0-zts-alpine::30
+library/php/8.1\
+ library/php/8.1-alpine\
+ library/php/8.1-apache\
+ library/php/8.1-cli\
+ library/php/8.1-cli-alpine\
+ library/php/8.1-fpm\
+ library/php/8.1-fpm-alpine\
+ library/php/8.1-zts\
+ library/php/8.1-zts-alpine::30
+library/php/8.2\
+ library/php/8.2-alpine\
+ library/php/8.2-apache\
+ library/php/8.2-cli\
+ library/php/8.2-cli-alpine\
+ library/php/8.2-fpm\
+ library/php/8.2-fpm-alpine\
+ library/php/8.2-zts\
+ library/php/8.2-zts-alpine::30
 "
 SKIP_REFRESH_ANCESTORS=${SKIP_REFRESH_ANCESTORS-}
 
@@ -538,7 +570,7 @@ gen_image() {
         if [ -e "$df" ];then dockerfiles="$dockerfiles $df" && break;fi
     done
     local parts=""
-    for partsstep in from args argspost helpers pre base post postextra clean cleanpost extra labels labelspost;do
+    for partsstep in squashpre from args argspost helpers pre base post postextra clean cleanpost predosquash squash squashpreexec squashexec postdosquash extra labels labelspost;do
         parts="$parts pre_${partsstep} ${partsstep} post_${partsstep}"
     done
     parts=$(echo "$parts"|xargs)
@@ -563,6 +595,10 @@ gen_image() {
 is_skipped() {
     local ret=1 t="$@"
     if [[ -z $SKIPPED_TAGS ]];then return 1;fi
+    if [[ -n "${PROTECTED_VERSIONS}" ]] && ( echo "$t" | grep -E -q "$PROTECTED_VERSIONS" );then
+        debug "$t is protected, no skip"
+        return 1
+    fi
     if ( echo "$t" | grep -E -q "$SKIPPED_TAGS" );then
         ret=0
     fi
@@ -573,7 +609,7 @@ is_skipped() {
 }
 
 skip_local() {
-    grep -E -v "(.\/)?local|\.git|docker-pgrouting|docker-postgis"
+    grep -E -v "(.\/)?local|\.git"
 }
 
 #  get_namespace_tag libary/foo/bar : get image tag with its final namespace
@@ -602,7 +638,6 @@ do_get_namespace_tag() {
             | sed -re "s/(-?(server)?-(web-vault|elasticsearch|opensearch|postgresql|mysql|mongo|mongodb|maria|mariadb)):/-server:\3-/g"
     done
 }
-
 
 filter_tags() {
     for j in $@ ;do for i in $j;do
@@ -638,16 +673,16 @@ get_image_tags() {
     # cleanup elastic minor images (keep latest)
     atags="$(filter_tags "$(cat $t.raw)")"
     changed=
-    if ( echo $t | grep -E -q "$ONLY_ONE_MINOR" );then
+    if [[ "x${ONLY_ONE_MINOR}" != "x" ]] && ( echo $n | grep -E -q "$ONLY_ONE_MINOR" );then
         oomt=""
-        for ix in $(seq 0 30);do
+        for ix in $(seq 0 99);do
             if ! ( echo "$atags" | grep -E -q "^$ix\." );then continue;fi
             for j in $(seq 0 99);do
                 if ! ( echo "$atags" | grep -E -q "^$ix\.${j}\." );then continue;fi
                 for flavor in "" \
                     alpine alpine3.13 alpine3.14 alpine3.15 alpine3.16 alpine3.5 \
-                    trusty xenial bionic focal jammy \
-                    bullseye stretch buster jessie \
+                    trusty xenial bionic focal jammy noble \
+                    bookworm bullseye stretch buster jessie \
                     ;do
                     selected=""
                     if [[ -z "$flavor" ]];then
@@ -663,10 +698,12 @@ get_image_tags() {
                     fi
                     if [[ -n "$selected" ]];then
                         for l in $(echo "$selected"|sed -e "$ d");do
-                            if [[ -z $oomt ]];then
-                                oomt="$l$"
-                            else
-                                oomt="$oomt|$l"
+                            if [[ -z "${PROTECTED_VERSIONS}" ]] || ! ( echo "$n:$l" | grep "${PROTECTED_VERSIONS}" );then
+                                if [[ -z $oomt ]];then
+                                    oomt="$l$"
+                                else
+                                    oomt="$oomt|$l"
+                                fi
                             fi
                         done
                     fi
@@ -679,7 +716,7 @@ get_image_tags() {
     fi
     if [[ -z ${SKIP_TAGS_REBUILD} ]];then
         rm -f "$t"
-        filter_tags "$atags" > $t
+        filter_tags "$atags" > "$t"
     fi
     set -e
     if [ -e "$t" ];then cat "$t";fi
@@ -762,20 +799,20 @@ is_same_commit_label() {
     return $ret
 }
 
-get_docker_squash_args() {
-    DOCKER_DO_SQUASH=${DOCKER_DO_SQUASH-init}
-    if ! ( echo "${NO_SQUASH-}"|grep -E -q "^(no)?$" );then
-        DOCKER_DO_SQUASH=""
-        log "no squash"
-    elif [[ "$DOCKER_DO_SQUASH" = init ]];then
-        DOCKER_DO_SQUASH="--squash"
-        if ! (printf "FROM alpine\nRUN touch foo\n" | docker build --squash - >/dev/null 2>&1 );then
-            DOCKER_DO_SQUASH=
-            log "docker squash isnt not supported"
-        fi
-    fi
-    echo $DOCKER_DO_SQUASH
-}
+#get_docker_squash_args() {
+#    DOCKER_DO_SQUASH=${DOCKER_DO_SQUASH-init}
+#    if ! ( echo "${NO_SQUASH-}"|grep -E -q "^(no)?$" );then
+#        DOCKER_DO_SQUASH=""
+#        log "no squash"
+#    elif [[ "$DOCKER_DO_SQUASH" = init ]];then
+#        DOCKER_DO_SQUASH="--squash"
+#        if ! (printf "FROM alpine\nRUN touch foo\n" | docker build --squash - >/dev/null 2>&1 );then
+#            DOCKER_DO_SQUASH=
+#            log "docker squash isnt not supported"
+#        fi
+#    fi
+#    echo $DOCKER_DO_SQUASH
+#}
 
 record_build_image() {
     # library/ubuntu/latest / corpusops/postgis/latest
@@ -791,7 +828,7 @@ record_build_image() {
         log "Image $itag is update to date, skipping build"
         return
     fi
-    dargs="${DOCKER_BUILD_ARGS-} $(get_docker_squash_args)"
+    dargs="${DOCKER_BUILD_ARGS-}"
     local dbuild="cat $image/$df|docker build ${dargs-}  -t $itag . -f - --build-arg=DOCKER_IMAGES_COMMIT=$git_commit"
     local retries=${DOCKER_BUILD_RETRIES:-2}
     local cmd="dret=8 && for i in \$(seq $retries);do if ($dbuild);then dret=0;break;else dret=6;fi;done"
