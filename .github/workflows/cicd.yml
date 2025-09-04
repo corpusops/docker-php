@@ -65,32 +65,26 @@ jobs:
       fail-fast: false
       matrix:
         IMAGES:
-        - "library/php/8 library/php/8-alpine library/php/8-apache library/php/8-cli library/php/8-cli-alpine library/php/8-fpm library/php/8-fpm-alpine library/php/8-zts"
-        - "library/php/7.4 library/php/7.4-alpine library/php/7.4-apache library/php/7.4-cli library/php/7.4-cli-alpine library/php/7.4-fpm library/php/7.4-fpm-alpine library/php/7.4-rc library/php/7.4-zts library/php/7.4-zts-alpine"
-        - "library/php/7.3 library/php/7.3-alpine library/php/7.3-apache library/php/7.3-cli library/php/7.3-cli-alpine library/php/7.3-fpm library/php/7.3-fpm-alpine library/php/7.3-zts library/php/7.3-zts-alpine"
-        - "library/php/7.2 library/php/7.2-alpine library/php/7.2-apache library/php/7.2-cli library/php/7.2-cli-alpine library/php/7.2-fpm library/php/7.2-fpm-alpine library/php/7.2-rc library/php/7.2-zts"
-        - "library/php/7.1 library/php/7.1-alpine library/php/7.1-apache library/php/7.1-cli library/php/7.1-cli-alpine library/php/7.1-fpm library/php/7.1-fpm-alpine library/php/7.1-rc library/php/7.1-zts library/php/7.1-zts-alpine"
-        - "library/php/8.0 library/php/8.0-alpine library/php/8.0-apache library/php/8.0-cli library/php/8.0-cli-alpine library/php/8.0-fpm library/php/8.0-fpm-alpine library/php/8.0-rc library/php/8.0-zts"
+        - "library/php/alpine library/php/apache library/php/cli library/php/cli-alpine library/php/fpm library/php/fpm-alpine library/php/latest library/php/zts library/php/zts-alpine"
+        - "library/php/8.3 library/php/8.3-alpine library/php/8.3-apache library/php/8.3-cli library/php/8.3-cli-alpine library/php/8.3-fpm library/php/8.3-fpm-alpine library/php/8.3-zts library/php/8.3-zts-alpine"
+        - "library/php/8 library/php/8-alpine library/php/8-apache library/php/8-cli library/php/8-cli-alpine library/php/8-fpm library/php/8-fpm-alpine library/php/8-zts library/php/8-zts-alpine"
         - "library/php/7 library/php/7-alpine library/php/7-apache library/php/7-cli library/php/7-cli-alpine library/php/7-fpm library/php/7-fpm-alpine library/php/7-zts library/php/7-zts-alpine"
-        - "library/php/5 library/php/5-alpine library/php/5-apache library/php/5-cli library/php/5-cli-alpine library/php/5-fpm library/php/5-fpm-alpine library/php/5-zts library/php/5-zts-alpine"
-        - "library/php/latest library/php/alpine library/php/apache library/php/cli library/php/cli-alpine library/php/fpm library/php/fpm-alpine library/php/zts library/php/zts-alpine"
+        - "library/php/7.0 library/php/7.0-alpine library/php/7.0-apache library/php/7.0-cli library/php/7.0-cli-alpine library/php/7.0-fpm library/php/7.0-fpm-alpine library/php/7.0-zts library/php/7.0-zts-alpine"
+        - "library/php/7.1 library/php/7.1-alpine library/php/7.1-apache library/php/7.1-cli library/php/7.1-cli-alpine library/php/7.1-fpm library/php/7.1-fpm-alpine library/php/7.1-zts library/php/7.1-zts-alpine"
+        - "library/php/7.2 library/php/7.2-alpine library/php/7.2-apache library/php/7.2-cli library/php/7.2-cli-alpine library/php/7.2-fpm library/php/7.2-fpm-alpine library/php/7.2-zts library/php/7.2-zts-alpine"
+        - "library/php/7.3 library/php/7.3-alpine library/php/7.3-apache library/php/7.3-cli library/php/7.3-cli-alpine library/php/7.3-fpm library/php/7.3-fpm-alpine library/php/7.3-zts library/php/7.3-zts-alpine"
+        - "library/php/7.4 library/php/7.4-alpine library/php/7.4-apache library/php/7.4-cli library/php/7.4-cli-alpine library/php/7.4-fpm library/php/7.4-fpm-alpine library/php/7.4-zts library/php/7.4-zts-alpine"
+        - "library/php/8.0 library/php/8.0-alpine library/php/8.0-apache library/php/8.0-cli library/php/8.0-cli-alpine library/php/8.0-fpm library/php/8.0-fpm-alpine library/php/8.0-zts library/php/8.0-zts-alpine"
+        - "library/php/8.1 library/php/8.1-alpine library/php/8.1-apache library/php/8.1-cli library/php/8.1-cli-alpine library/php/8.1-fpm library/php/8.1-fpm-alpine library/php/8.1-zts library/php/8.1-zts-alpine"
+        - "library/php/8.2 library/php/8.2-alpine library/php/8.2-apache library/php/8.2-cli library/php/8.2-cli-alpine library/php/8.2-fpm library/php/8.2-fpm-alpine library/php/8.2-zts library/php/8.2-zts-alpine"
         #- "corpusops/test/a corpusops/test/b corpusops/test/c"
         # all images that werent explicitly told to be built would be built in the next batches
         # we span them onto N jobs
-        - "zleftover:1/14"
-        - "zleftover:2/14"
-        - "zleftover:3/14"
-        - "zleftover:4/14"
-        - "zleftover:5/14"
-        - "zleftover:6/14"
-        - "zleftover:7/14"
-        - "zleftover:8/14"
-        - "zleftover:9/14"
-        - "zleftover:10/14"
-        - "zleftover:11/14"
-        - "zleftover:12/14"
-        - "zleftover:13/14"
-        - "zleftover:14/14"
+        - "zleftover:1/4"
+        - "zleftover:2/4"
+        - "zleftover:3/4"
+        - "zleftover:4/4"
+
 on:
   push:
   workflow_dispatch:
